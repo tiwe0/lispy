@@ -5,11 +5,13 @@ from lispy.core.interpreter import Interpreter
 
 def lispy():
     interpreter = Interpreter()
+    from lispy.object.lispSymbolObject import LispSymbolObject
+    print(LispSymbolObject.symbol_bucket)
 
     while True:
         _input = input("lispy> ")
         try:
-            print(interpreter.interpret(_input))
+            print(str(interpreter.interpret(_input)))
         except KeyboardInterrupt:
             sys.exit(0)
         except EOFError:

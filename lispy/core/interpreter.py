@@ -14,5 +14,6 @@ class Interpreter:
 
     def interpret(self, code: str):
         lisp_obj = self._reader.read_a_form(code)
+        print(lisp_obj)
         value = self._evaluator.eval(lisp_obj)
         return value

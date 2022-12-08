@@ -1,11 +1,12 @@
 from lispy.object.lispObject import LispObject
 from lispy.object.lispFormObject import LispFormObject
+from lispy.object.lispSymbolObject import LispSymbolObject
+from lispy.object.lispNumberObject import LispIntegerObject
 
 
 class Reader:
     """读取器，将文本代码转换为Lisp对象."""
     _instance = None
-    prime_funcs = {""}
 
     def __new__(cls):
         if cls._instance is None:
@@ -63,5 +64,18 @@ class Reader:
 
     def read_a_token(self, token_str: 'str'):
         token_str = token_str.strip()
-        lisp_object = LispObject.create_lisp_object(token_str)
+        lisp_object = self.create_lisp_object(token_str)
         return lisp_object
+
+    def create_lisp_object(self, token: 'str'):
+        token = token.strip()
+        if token.isdigit():
+            return LispIntegerObject(token)
+        if token in LispSymbolObject.symbol_bucket:
+            return LispSymbolObject.symbol_bucket[token]
+        return LispSymbolObject(token)
+
+
+if __name__ == "__main__":
+    reader = Reader()
+
