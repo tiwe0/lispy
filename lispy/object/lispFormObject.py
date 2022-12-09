@@ -2,6 +2,7 @@ import itertools
 from collections import deque
 
 from lispy.object.lispObject import LispObject
+from lispy.object.lispBooleanObject import LispBooleanObject
 
 
 class LispFormObject(LispObject):
@@ -31,6 +32,9 @@ class LispFormObject(LispObject):
             return list(itertools.islice(self._slots, start, stop))
         return self._slots[key]
 
+    def __len__(self):
+        return len(self._slots)
+
     def push(self, sub_form: 'LispObject'):
         self._slots.append(sub_form)
 
@@ -40,9 +44,21 @@ class LispFormObject(LispObject):
     def __repr__(self):
         return '(' + ' '.join((repr(t) for t in self._slots)) + ')'
 
+    def as_boolean(self):
+        if self._slots:
+            return True
+        return False
+
     def eval(self):
         """TODO这里将eval的委托给第一符号"""
         func = self[0].eval_as_function()
         return func.eval(context=self)
 
-LispLispObject = LispFormObject
+    @classmethod
+    def build_list(cls, *forms):
+        lisp_list = LispListObject()
+        for form in forms:
+            lisp_list.push(form)
+        return lisp_list
+
+LispListObject = LispFormObject

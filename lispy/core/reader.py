@@ -1,7 +1,7 @@
 from lispy.object.lispObject import LispObject
 from lispy.object.lispFormObject import LispFormObject
 from lispy.object.lispSymbolObject import LispSymbolObject
-from lispy.object.lispNumberObject import LispIntegerObject
+from lispy.object.lispNumberObject import LispIntegerObject, LispFloatObject
 
 
 class Reader:
@@ -67,10 +67,19 @@ class Reader:
         lisp_object = self.create_lisp_object(token_str)
         return lisp_object
 
+    def read_a_file(self, lispy_path: 'str'):
+        lisp_object_lst = []
+        with open(lispy_path, mode='rt') as f:
+            for form in f:
+                lisp_object_lst.append(self.read_a_form(form))
+            return lisp_object_lst
+
     def create_lisp_object(self, token: 'str'):
         token = token.strip()
         if token.isdigit():
             return LispIntegerObject(token)
+        if token.isnumeric():
+            return LispFloatObject(token)
         if token in LispSymbolObject.symbol_bucket:
             return LispSymbolObject.symbol_bucket[token]
         return LispSymbolObject(token)

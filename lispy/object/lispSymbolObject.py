@@ -21,27 +21,46 @@ class LispSymbolObject(LispObject):
             return
         super().__init__(symbol_name)
         self.type = 'SYMBOL'
+        self._index = 0
         self.symbol_name = symbol_name
-        self.slot_vari = slot_vari
+        self._slot_vari = [slot_vari]
         self.slot_func: 'Optional[LispMacroObject, LispFunctionObject, LispSymbolObject]' = slot_func
         self.interning()
+
+    @property
+    def slot_vari(self):
+        return self._slot_vari[self._index]
+
+    @slot_vari.setter
+    def slot_vari(self, value):
+        self.push(value)
+
+    def push(self, value):
+        self._slot_vari.append(value)
+        self._index += 1
+
+    def pop(self):
+        if self._index == 0:
+            raise Exception("Symbol no value to pop!")
+        self._slot_vari.pop()
+        self._index -= 1
 
     def eval(self):
         if self.slot_vari:
             return self.slot_vari
-        raise Exception("Symbol with void variable!")
+        raise Exception(f"Symbol {self.token} with void variable!")
 
     def eval_as_variable(self):
         if self.slot_vari:
             return self.slot_vari
-        raise Exception("Symbol with void variable!")
+        raise Exception(f"Symbol {self.token} with void variable!")
 
     def eval_as_function(self):
         return self.inderect()
 
     def inderect(self):
         if not self.slot_func:
-            raise Exception("Symbol with void function!")
+            raise Exception(f"Symbol {self.token} with void function!")
         if self.slot_func and isinstance(self.slot_func, LispSymbolObject):
             return self.slot_func.inderect()
         return self.slot_func

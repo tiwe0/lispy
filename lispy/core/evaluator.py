@@ -10,7 +10,7 @@ class Evaluator:
 
     def _assert_lispObject(self, lisp_object: 'LispObject'):
         assert isinstance(lisp_object, LispObject), 'lisp_object should be LispObject instance'
-        return lisp_object.eval()
+        return True
 
     def eval(self, lisp_object: 'LispObject'):
         self._assert_lispObject(lisp_object)

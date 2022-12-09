@@ -10,8 +10,9 @@ class LispObject:
     def __repr__(self):
         return f"{self.type}: {self.token}"
 
-    def __str__(self):
-        return f"{self.token}"
+    @abstractmethod
+    def as_boolean(self):
+        raise NotImplementedError()
 
     @abstractmethod
     def eval(self):

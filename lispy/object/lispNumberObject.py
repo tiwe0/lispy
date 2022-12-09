@@ -22,6 +22,9 @@ class LispNumberObject(LispImmutableObject):
             raise ZeroDivisionError()
         return LispFloatObject(self.value/other.value)
 
+    def as_boolean(self):
+        return True
+
 class LispFloatObject(LispNumberObject):
     """lispy 中表示浮点数的类."""
     def __init__(self, token: 'str'):
